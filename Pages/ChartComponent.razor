@@ -1,0 +1,31 @@
+<!-- ChartComponent.razor -->
+
+@page "/chart"
+
+@inject IJSRuntime JSRuntime
+
+<h3>Chart.js Integration in Blazor</h3>
+
+<div id="chartContainer"></div>
+
+@code {
+    [Parameter] public string ChartType { get; set; } = "bar";
+    [Parameter] public List<string> Labels { get; set; } = new List<string>();
+    [Parameter] public List<int> Data { get; set; } = new List<int>();
+
+    private async Task InitializeChart()
+    {
+        // Use JSInterop to initialize Chart.js with customizable options
+        await JSRuntime.InvokeVoidAsync("initializeChart", ChartType, Labels, Data);
+    }
+
+   
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Initialize the chart after the component has rendered
+            await InitializeChart();
+        }
+    }
+}
